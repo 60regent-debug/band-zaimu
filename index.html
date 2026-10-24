@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>バンドのお財布（叩き台）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6fa; --card:#ffffff; --ink:#1c2433; --sub:#6b7488; --line:#e3e7ef;
+  --accent:#1f4fbf; --in:#15803d; --out:#c2410c; --warn-bg:#fff7e0; --warn-ink:#7a5a00;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#10141c; --card:#1a202b; --ink:#e8ecf3; --sub:#9aa3b5; --line:#2a3240;
+    --accent:#6f9bff; --in:#4ade80; --out:#fb923c; --warn-bg:#3a3010; --warn-ink:#f3d27a; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Zen Kaku Gothic New",-apple-system,"Hiragino Sans",sans-serif;font-size:16px;line-height:1.5;
+  padding-bottom:96px}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+.notice{background:var(--warn-bg);color:var(--warn-ink);font-size:13px;padding:8px 16px;text-align:center}
+header{padding:20px 0 8px}
+header .band{font-size:14px;color:var(--sub)}
+header h1{margin:2px 0 0;font-size:22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0}
+.balance .label{font-size:14px;color:var(--sub)}
+.balance .num{font-size:40px;font-weight:700;letter-spacing:.01em;margin:2px 0 10px}
+.row3{display:flex;gap:10px}
+.row3>div{flex:1;background:var(--bg);border-radius:12px;padding:10px}
+.row3 .k{font-size:12px;color:var(--sub)}
+.row3 .v{font-size:17px;font-weight:700}
+.in{color:var(--in)} .out{color:var(--out)}
+h2{font-size:15px;margin:22px 0 6px;color:var(--sub);font-weight:500}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;
+  padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.bars .b{margin:8px 0}
+.bars .t{display:flex;justify-content:space-between;font-size:14px}
+.bars .track{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:3px}
+.bars .fill{height:100%;background:var(--out);border-radius:4px}
+.empty{color:var(--sub);font-size:14px}
+.list{padding:4px 18px}
+.item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:none}
+.item .d{font-size:12px;color:var(--sub);width:44px;flex:none;text-align:center}
+.item .d b{display:block;font-size:18px;color:var(--ink)}
+.item .m{flex:1;min-width:0}
+.item .m .what{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .m .meta{font-size:12px;color:var(--sub)}
+.item .amt{font-weight:700;white-space:nowrap}
+.item .del{border:none;background:none;color:var(--sub);font-size:18px;cursor:pointer;padding:4px}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom));
+  background:var(--accent);color:#fff;border:none;border-radius:999px;padding:14px 28px;font:inherit;font-weight:700;
+  font-size:17px;box-shadow:0 6px 18px rgba(0,0,0,.2);cursor:pointer}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:flex-end;justify-content:center;z-index:10}
+.sheet-bg.open{display:flex}
+.sheet{background:var(--card);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));
+  max-height:92vh;overflow:auto}
+.sheet h3{margin:0 0 12px;font-size:18px}
+.seg{display:flex;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:12px}
+.seg button{flex:1;border:none;background:none;color:var(--ink);padding:10px;border-radius:9px;font:inherit;font-weight:700;cursor:pointer}
+.seg button.on.inb{background:var(--in);color:#fff}
+.seg button.on.outb{background:var(--out);color:#fff}
+label{display:block;font-size:13px;color:var(--sub);margin:10px 0 4px}
+input,select{width:100%;font:inherit;font-size:17px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;
+  background:var(--bg);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer}
+.chips button.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.actions{display:flex;gap:10px;margin-top:18px}
+.actions button{flex:1;padding:13px;border-radius:12px;font:inherit;font-weight:700;font-size:16px;cursor:pointer}
+.btn-sub{background:var(--bg);border:1px solid var(--line);color:var(--ink)}
+.btn-main{background:var(--accent);border:none;color:#fff}
+.foot{font-size:12px;color:var(--sub);text-align:center;margin:24px 0}
+.foot button{border:none;background:none;color:var(--accent);font:inherit;text-decoration:underline;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="notice">叩き台です。数字はすべて架空。入力はこのスマホにだけ保存されます。</div>
+<div class="wrap">
+  <header>
+    <div class="band">サンプルバンド</div>
+    <h1>バンドのお財布</h1>
+  </header>
+
+  <section class="card balance">
+    <div class="label">いまプールにあるお金</div>
+    <div class="num" id="balance">¥0</div>
+    <div class="row3">
+      <div><div class="k" id="mLabel">今月の入金</div><div class="v in" id="mIn">¥0</div></div>
+      <div><div class="k">今月の出金</div><div class="v out" id="mOut">¥0</div></div>
+    </div>
+  </section>
+
+  <h2>何に使った？</h2>
+  <div class="tabs" id="periodTabs"></div>
+  <section class="card bars" id="bars"></section>
+
+  <h2>お金の出入り</h2>
+  <section class="card list" id="list"></section>
+
+  <div class="foot">
+    <button id="resetBtn">サンプルの数字に戻す</button>
+  </div>
+</div>
+
+<button class="fab" id="addBtn">＋ 記録する</button>
+
+<div class="sheet-bg" id="sheetBg">
+  <div class="sheet" role="dialog" aria-label="記録する">
+    <h3>お金の出入りを記録</h3>
+    <div class="seg">
+      <button class="inb" data-kind="in">入ってきた</button>
+      <button class="outb on" data-kind="out">出ていった</button>
+    </div>
+    <label for="fAmount">金額（円）</label>
+    <input id="fAmount" type="number" inputmode="numeric" min="1" placeholder="例：8000">
+    <label>種類</label>
+    <div class="chips" id="fCats"></div>
+    <label for="fMemo">メモ</label>
+    <input id="fMemo" type="text" placeholder="例：スタジオ代（3時間）">
+    <label for="fDate">日付</label>
+    <input id="fDate" type="date">
+    <label for="fWho">記録した人</label>
+    <select id="fWho"></select>
+    <div class="actions">
+      <button class="btn-sub" id="cancelBtn">やめる</button>
+      <button class="btn-main" id="saveBtn">記録する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MEMBERS = ["ドラ", "Robin", "メンバーA", "メンバーB"];
+const CATS = {
+  in:  ["ライブのギャラ", "物販", "投げ銭", "その他の入金"],
+  out: ["スタジオ代", "交通費", "機材・修理", "物販の仕入れ", "その他の出金"]
+};
+const KEY = "bandZaimu.v1";
+const ymd = t => `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`;
+
+function sample(){
+  const y = new Date().getFullYear(), m = new Date().getMonth();
+  const d = (mm, dd) => { return ymd(new Date(y, m + mm, dd)); };
+  return [
+    {id:1, kind:"in",  amount:120000, cat:"その他の入金",  memo:"これまでのプール（繰越）", date:d(-2,1),  who:"ドラ"},
+    {id:2, kind:"out", amount:9000,   cat:"スタジオ代",    memo:"リハ 3時間",              date:d(-2,8),  who:"Robin"},
+    {id:3, kind:"in",  amount:40000,  cat:"ライブのギャラ", memo:"ASIVI ライブ",            date:d(-2,15), who:"ドラ"},
+    {id:4, kind:"in",  amount:18500,  cat:"物販",          memo:"CD・Tシャツ",             date:d(-2,15), who:"メンバーA"},
+    {id:5, kind:"out", amount:6400,   cat:"交通費",        memo:"ガソリン・駐車場",        date:d(-2,15), who:"メンバーB"},
+    {id:6, kind:"out", amount:9000,   cat:"スタジオ代",    memo:"リハ 3時間",              date:d(-1,5),  who:"Robin"},
+    {id:7, kind:"out", amount:24000,  cat:"物販の仕入れ",  memo:"Tシャツ追加 20枚",        date:d(-1,12), who:"ドラ"},
+    {id:8, kind:"in",  amount:30000,  cat:"ライブのギャラ", memo:"イベント出演",            date:d(-1,20), who:"ドラ"},
+    {id:9, kind:"in",  amount:7000,   cat:"物販",          memo:"Tシャツ",                 date:d(-1,20), who:"メンバーA"},
+    {id:10,kind:"out", amount:9000,   cat:"スタジオ代",    memo:"リハ 3時間",              date:d(0,3),   who:"Robin"},
+    {id:11,kind:"out", amount:5500,   cat:"機材・修理",    memo:"弦・ケーブル",            date:d(0,6),   who:"メンバーB"},
+    {id:12,kind:"in",  amount:3200,   cat:"投げ銭",        memo:"路上ライブ",              date:d(0,10),  who:"メンバーA"}
+  ];
+}
+
+function load(){
+  try { const s = localStorage.getItem(KEY); if (s) return JSON.parse(s); } catch(e){}
+  return sample();
+}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){} }
+
+let data = load();
+let period = "month";
+const yen = n => "¥" + n.toLocaleString("ja-JP");
+const ym = s => s.slice(0,7);
+const thisYm = () => ymd(new Date()).slice(0,7);
+
+function render(){
+  const bal = data.reduce((a,t) => a + (t.kind === "in" ? t.amount : -t.amount), 0);
+  document.getElementById("balance").textContent = yen(bal);
+  const cur = data.filter(t => ym(t.date) === thisYm());
+  const sum = k => cur.filter(t => t.kind === k).reduce((a,t) => a + t.amount, 0);
+  document.getElementById("mIn").textContent = yen(sum("in"));
+  document.getElementById("mOut").textContent = yen(sum("out"));
+  document.getElementById("mLabel").textContent = (new Date().getMonth()+1) + "月の入金";
+
+  // 使い道の内訳
+  const tabs = [["month","今月"],["all","これまで全部"]];
+  document.getElementById("periodTabs").innerHTML = tabs.map(([k,l]) =>
+    `<button data-p="${k}" class="${k===period?'on':''}">${l}</button>`).join("");
+  const pool = (period === "month" ? cur : data).filter(t => t.kind === "out");
+  const byCat = {};
+  pool.forEach(t => byCat[t.cat] = (byCat[t.cat] || 0) + t.amount);
+  const rows = Object.entries(byCat).sort((a,b) => b[1]-a[1]);
+  const max = rows.length ? rows[0][1] : 1;
+  document.getElementById("bars").innerHTML = rows.length
+    ? rows.map(([c,v]) => `<div class="b"><div class="t"><span>${c}</span><span>${yen(v)}</span></div>
+        <div class="track"><div class="fill" style="width:${Math.round(v/max*100)}%"></div></div></div>`).join("")
+    : `<div class="empty">この期間の出金はまだありません</div>`;
+
+  // 一覧（新しい順）
+  const sorted = [...data].sort((a,b) => b.date.localeCompare(a.date) || b.id - a.id);
+  document.getElementById("list").innerHTML = sorted.length ? sorted.map(t => {
+    const [, mm, dd] = t.date.split("-");
+    return `<div class="item">
+      <div class="d">${+mm}月<b>${+dd}</b></div>
+      <div class="m"><div class="what">${esc(t.memo || t.cat)}</div><div class="meta">${t.cat}・${esc(t.who)}が記録</div></div>
+      <div class="amt ${t.kind}">${t.kind==="in"?"+":"−"}${yen(t.amount)}</div>
+      <button class="del" data-id="${t.id}" aria-label="消す">×</button>
+    </div>`;
+  }).join("") : `<div class="empty" style="padding:14px 0">まだ記録がありません</div>`;
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+// 入力シート
+let fKind = "out", fCat = null;
+function renderCats(){
+  fCat = CATS[fKind][0];
+  document.getElementById("fCats").innerHTML = CATS[fKind].map(c =>
+    `<button data-c="${c}" class="${c===fCat?'on':''}">${c}</button>`).join("");
+}
+function openSheet(){
+  fKind = "out";
+  document.querySelectorAll(".seg button").forEach(b => b.classList.toggle("on", b.dataset.kind === fKind));
+  renderCats();
+  document.getElementById("fAmount").value = "";
+  document.getElementById("fMemo").value = "";
+  document.getElementById("fDate").value = ymd(new Date());
+  document.getElementById("fWho").innerHTML = MEMBERS.map(m => `<option>${m}</option>`).join("");
+  document.getElementById("sheetBg").classList.add("open");
+}
+const closeSheet = () => document.getElementById("sheetBg").classList.remove("open");
+
+document.getElementById("addBtn").onclick = openSheet;
+document.getElementById("cancelBtn").onclick = closeSheet;
+document.getElementById("sheetBg").onclick = e => { if (e.target.id === "sheetBg") closeSheet(); };
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+  fKind = b.dataset.kind;
+  document.querySelectorAll(".seg button").forEach(x => x.classList.toggle("on", x === b));
+  renderCats();
+});
+document.getElementById("fCats").onclick = e => {
+  const c = e.target.dataset.c; if (!c) return;
+  fCat = c;
+  document.querySelectorAll("#fCats button").forEach(x => x.classList.toggle("on", x.dataset.c === c));
+};
+document.getElementById("saveBtn").onclick = () => {
+  const amount = parseInt(document.getElementById("fAmount").value, 10);
+  if (!(amount > 0)) { document.getElementById("fAmount").focus(); return; }
+  data.push({ id: Date.now(), kind: fKind, amount, cat: fCat,
+    memo: document.getElementById("fMemo").value.trim(),
+    date: document.getElementById("fDate").value || ymd(new Date()),
+    who: document.getElementById("fWho").value });
+  save(); closeSheet(); render();
+};
+document.getElementById("periodTabs").onclick = e => { if (e.target.dataset.p){ period = e.target.dataset.p; render(); } };
+document.getElementById("list").onclick = e => {
+  const id = e.target.dataset.id; if (!id) return;
+  data = data.filter(t => String(t.id) !== id); save(); render();
+};
+document.getElementById("resetBtn").onclick = () => { data = sample(); save(); render(); };
+render();
+</script>
+</body>
+</html>
